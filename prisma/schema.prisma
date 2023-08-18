@@ -10,8 +10,36 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  image     String     @default("")
+  questions Question[]
+}
+
+model Question {
+  id         Int      @id @default(autoincrement())
+  question   String
+  answer     String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  answers    Answer[]
+  votes      Vote[]
+}
+
+model Answer {
+  id         Int      @id @default(autoincrement())
+  answer     String
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  votes      Vote[]
+}
+
+model Vote {
+  id         Int      @id @default(autoincrement())
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  answer     Answer   @relation(fields: [answerId], references: [id])
+  answerId   Int
+  email      String
 }
